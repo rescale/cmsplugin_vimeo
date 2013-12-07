@@ -10,9 +10,7 @@ class LatestVideosNode(template.Node):
         self.count = count
 
     def render(self, context):
-        videos = []
-        for i in range(0, self.count):
-            videos.push(Vimeo.objects.order_by('cmsplugin_ptr_id').last())
+        videos = Vimeo.objects.order_by('-id')[:self.count]
         context['videos'] = videos
     return ''
 
