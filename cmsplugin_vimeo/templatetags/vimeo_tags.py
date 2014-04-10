@@ -11,7 +11,7 @@ class LatestVideosNode(template.Node):
         self.count = count
 
     def render(self, context):
-        videos = list(Vimeo.objects.order_by('-id')[:self.count])
+        videos = Vimeo.objects.order_by('-video_id').distinct('video_id')[:self.count]
 
         for v in videos:
             r = requests.get('https://vimeo.com/api/v2/video/%s.json'
