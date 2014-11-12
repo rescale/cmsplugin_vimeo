@@ -16,9 +16,13 @@ class LatestVideosNode(template.Node):
         for v in videos:
             r = requests.get('https://vimeo.com/api/v2/video/%s.json'
                              % v.video_id)
-            v.page_title = v.page.get_menu_title()
-            v.page_link = v.page.get_absolute_url()
-            v.thumbnail = r.json()[0]['thumbnail_large']
+            if v.page:
+                v.page_title = v.page.get_menu_title()
+                v.page_link = v.page.get_absolute_url()
+                try:
+                    v.thumbnail = r.json()[0]['thumbnail_large']
+                except ValueError:
+                    v.thumbnail = ''
 
         context['videos'] = videos
         return ''
