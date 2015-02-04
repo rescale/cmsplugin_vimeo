@@ -60,3 +60,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['cmsplugin_vimeo']
+
