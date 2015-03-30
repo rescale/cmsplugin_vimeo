@@ -2,7 +2,6 @@ from django import template
 from cmsplugin_vimeo.models import Vimeo
 import requests
 
-
 register = template.Library()
 
 
@@ -11,11 +10,17 @@ class LatestVideosNode(template.Node):
         self.count = count
 
     def render(self, context):
-        videos = Vimeo.objects.order_by('-video_id').distinct('video_id')[:self.count]
+        videos = Vimeo.objects.order_by('-video_id').distinct(
+            'video_id')[:self.count]
+
+        s = requests.Session()
+        a = requests.adapters.HTTPAdapter(max_retries=3)
+        s.mount('https://', a)
 
         for v in videos:
-            r = requests.get('https://vimeo.com/api/v2/video/%s.json'
-                             % v.video_id)
+            url = 'https://vimeo.com/api/v2/video/{0}.json'.format(v.video_id)
+            r = s.get(url)
+
             if v.page:
                 v.page_title = v.page.get_menu_title()
                 v.page_link = v.page.get_absolute_url()
