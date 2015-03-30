@@ -2,6 +2,7 @@ from django import template
 from cmsplugin_vimeo.models import Vimeo
 import requests
 
+
 register = template.Library()
 
 
@@ -19,7 +20,7 @@ class LatestVideosNode(template.Node):
 
         for v in videos:
             url = 'https://vimeo.com/api/v2/video/{0}.json'.format(v.video_id)
-            r = s.get(url)
+            r = s.get(url, timeout=5)
 
             if v.page:
                 v.page_title = v.page.get_menu_title()
